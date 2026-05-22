@@ -18,11 +18,23 @@ const NAV = [
 
 export default function AdminDashboard() {
   const [tab, setTab] = useState('overview');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="layout">
-      <Sidebar navItems={NAV} activeTab={tab} onTabChange={setTab} />
+      {sidebarOpen && <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
+      <Sidebar
+        navItems={NAV}
+        activeTab={tab}
+        onTabChange={setTab}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
       <main className="main-content">
+        <div className="mobile-header">
+          <button className="hamburger-btn" onClick={() => setSidebarOpen(true)}>☰</button>
+          <span className="mobile-title">Sar Kyi Tite</span>
+        </div>
         {tab === 'overview' && <AdminOverview setTab={setTab} />}
         {tab === 'users' && <ManageUsers />}
         {tab === 'browse' && <BrowseBooks />}

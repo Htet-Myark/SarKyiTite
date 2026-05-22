@@ -46,7 +46,7 @@ export default function AdminOverview({ setTab }) {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+      <div className="overview-quick-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <div className="card" style={{ cursor: 'pointer' }} onClick={() => setTab('users')}>
           <div className="card-body" style={{ textAlign: 'center', padding: '28px' }}>
             <div style={{ fontSize: '40px', marginBottom: '10px' }}>👥</div>

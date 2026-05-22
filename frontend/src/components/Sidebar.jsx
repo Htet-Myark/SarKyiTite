@@ -1,10 +1,15 @@
 import { useAuth } from '../context/AuthContext';
 
-export default function Sidebar({ navItems, activeTab, onTabChange, unreadWarnings = 0 }) {
+export default function Sidebar({ navItems, activeTab, onTabChange, unreadWarnings = 0, isOpen, onClose }) {
   const { user, logout } = useAuth();
 
+  const handleNav = (id) => {
+    onTabChange(id);
+    if (onClose) onClose();
+  };
+
   return (
-    <div className="sidebar">
+    <div className={`sidebar${isOpen ? ' open' : ''}`}>
       <div className="sidebar-logo">
         <span className="logo-icon">📚</span>
         <div>
@@ -18,7 +23,7 @@ export default function Sidebar({ navItems, activeTab, onTabChange, unreadWarnin
           <button
             key={item.id}
             className={`nav-item ${activeTab === item.id ? 'active' : ''}`}
-            onClick={() => onTabChange(item.id)}
+            onClick={() => handleNav(item.id)}
           >
             <span className="icon">{item.icon}</span>
             {item.label}
