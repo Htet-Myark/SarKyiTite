@@ -8,7 +8,7 @@ const { sendPasswordResetEmail } = require('../utils/email');
 const router = express.Router();
 
 const signToken = (id) =>
-  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30m' });
 
 router.post('/register', async (req, res) => {
   try {

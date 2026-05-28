@@ -3,23 +3,35 @@ import api from '../api';
 
 const AuthContext = createContext(null);
 
+const isTokenExpired = (token) => {
+  try {
+    const { exp } = JSON.parse(atob(token.split('.')[1]));
+    return exp * 1000 < Date.now();
+  } catch {
+    return true;
+  }
+};
+
+const clearAuth = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+};
+
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('user');
-    return saved ? JSON.parse(saved) : null;
-  });
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
-      api.get('/auth/me')
-        .then(res => setUser(res.data))
-        .catch(() => logout())
-        .finally(() => setLoading(false));
-    } else {
+    if (!token || isTokenExpired(token)) {
+      clearAuth();
       setLoading(false);
+      return;
     }
+    api.get('/auth/me')
+      .then(res => setUser(res.data))
+      .catch(() => clearAuth())
+      .finally(() => setLoading(false));
   }, []);
 
   const login = async (username, password) => {
@@ -39,8 +51,7 @@ export function AuthProvider({ children }) {
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    clearAuth();
     setUser(null);
   };
 
