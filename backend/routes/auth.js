@@ -4,13 +4,14 @@ const crypto = require('crypto');
 const User = require('../models/User');
 const { protect } = require('../middleware/auth');
 const { sendPasswordResetEmail } = require('../utils/email');
+const { registerLimiter, loginLimiter, forgotPasswordLimiter } = require('../middleware/rateLimiter');
 
 const router = express.Router();
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30m' });
 
-router.post('/register', async (req, res) => {
+router.post('/register', registerLimiter, async (req, res) => {
   try {
     const { username, email, password } = req.body;
     if (!username || !email || !password)
@@ -31,7 +32,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', loginLimiter, async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username || !password)
@@ -68,7 +69,7 @@ router.post('/mark-warnings-read', protect, async (req, res) => {
   }
 });
 
-router.post('/forgot-password', async (req, res) => {
+router.post('/forgot-password', forgotPasswordLimiter, async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ message: 'Email is required' });

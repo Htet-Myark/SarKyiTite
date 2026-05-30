@@ -1,0 +1,18 @@
+{
+  "name": "library-e2e-tests",
+  "version": "1.0.0",
+  "description": "Playwright tests for Sar Kyi Tite Library Management System",
+  "scripts": {
+    "test": "playwright test",
+    "test:api": "playwright test --project=api",
+    "test:ui": "playwright test --project=ui",
+    "test:headed": "playwright test --project=ui --headed",
+    "report": "playwright show-report",
+    "cleanup": "node cleanup.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "dotenv": "^16.0.0",
+    "mongoose": "^9.0.0"
+  }
+}
